@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import Goal from '../models/Goal';
+import Preference from '../models/Preference';
 
 const router = express.Router();
 
@@ -8,12 +8,12 @@ function isError(error: any): error is Error {
   return error instanceof Error;
 }
 
-// Create a new goal
+// Create a new preference
 router.post('/', async (req: Request, res: Response) => {
   try {
-    const goal = new Goal(req.body);
-    await goal.save();
-    res.status(201).json(goal);
+    const preference = new Preference(req.body);
+    await preference.save();
+    res.status(201).json(preference);
   } catch (error: unknown) {
     if (isError(error)) {
       res.status(400).json({ message: error.message });
@@ -24,11 +24,11 @@ router.post('/', async (req: Request, res: Response) => {
   }
 });
 
-// Get all goals
+// Get all preferences
 router.get('/', async (req: Request, res: Response) => {
   try {
-    const goals = await Goal.find();
-    res.json(goals);
+    const preferences = await Preference.find().populate('userID');
+    res.json(preferences);
   } catch (error: unknown) {
     if (isError(error)) {
       res.status(500).json({ message: error.message });
@@ -39,14 +39,14 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
-// Get a single goal by ID
+// Get a single preference by ID
 router.get('/:id', async (req: Request, res: Response) => {
   try {
-    const goal = await Goal.findById(req.params.id);
-    if (!goal) {
-      return res.status(404).json({ message: 'Goal not found' });
+    const preference = await Preference.findById(req.params.id).populate('userID');
+    if (!preference) {
+      return res.status(404).json({ message: 'Preference not found' });
     }
-    res.json(goal);
+    res.json(preference);
   } catch (error: unknown) {
     if (isError(error)) {
       res.status(500).json({ message: error.message });
@@ -57,17 +57,17 @@ router.get('/:id', async (req: Request, res: Response) => {
   }
 });
 
-// Update a goal by ID
+// Update a preference by ID
 router.put('/:id', async (req: Request, res: Response) => {
   try {
-    const goal = await Goal.findByIdAndUpdate(req.params.id, req.body, {
+    const preference = await Preference.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
-    });
-    if (!goal) {
-      return res.status(404).json({ message: 'Goal not found' });
+    }).populate('userID');
+    if (!preference) {
+      return res.status(404).json({ message: 'Preference not found' });
     }
-    res.json(goal);
+    res.json(preference);
   } catch (error: unknown) {
     if (isError(error)) {
       res.status(400).json({ message: error.message });
@@ -78,12 +78,12 @@ router.put('/:id', async (req: Request, res: Response) => {
   }
 });
 
-// Delete a goal by ID
+// Delete a preference by ID
 router.delete('/:id', async (req: Request, res: Response) => {
   try {
-    const goal = await Goal.findByIdAndDelete(req.params.id);
-    if (!goal) {
-      return res.status(404).json({ message: 'Goal not found' });
+    const preference = await Preference.findByIdAndDelete(req.params.id);
+    if (!preference) {
+      return res.status(404).json({ message: 'Preference not found' });
     }
     res.sendStatus(204);
   } catch (error: unknown) {

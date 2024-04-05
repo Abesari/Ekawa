@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import Goal from '../models/Goal';
+import Category from '../models/Category';
 
 const router = express.Router();
 
@@ -8,12 +8,12 @@ function isError(error: any): error is Error {
   return error instanceof Error;
 }
 
-// Create a new goal
+// Create a new category
 router.post('/', async (req: Request, res: Response) => {
   try {
-    const goal = new Goal(req.body);
-    await goal.save();
-    res.status(201).json(goal);
+    const category = new Category(req.body);
+    await category.save();
+    res.status(201).json(category);
   } catch (error: unknown) {
     if (isError(error)) {
       res.status(400).json({ message: error.message });
@@ -24,11 +24,11 @@ router.post('/', async (req: Request, res: Response) => {
   }
 });
 
-// Get all goals
+// Get all categories
 router.get('/', async (req: Request, res: Response) => {
   try {
-    const goals = await Goal.find();
-    res.json(goals);
+    const categories = await Category.find();
+    res.json(categories);
   } catch (error: unknown) {
     if (isError(error)) {
       res.status(500).json({ message: error.message });
@@ -39,14 +39,14 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
-// Get a single goal by ID
+// Get a single category by ID
 router.get('/:id', async (req: Request, res: Response) => {
   try {
-    const goal = await Goal.findById(req.params.id);
-    if (!goal) {
-      return res.status(404).json({ message: 'Goal not found' });
+    const category = await Category.findById(req.params.id);
+    if (!category) {
+      return res.status(404).json({ message: 'Category not found' });
     }
-    res.json(goal);
+    res.json(category);
   } catch (error: unknown) {
     if (isError(error)) {
       res.status(500).json({ message: error.message });
@@ -57,17 +57,17 @@ router.get('/:id', async (req: Request, res: Response) => {
   }
 });
 
-// Update a goal by ID
+// Update a category by ID
 router.put('/:id', async (req: Request, res: Response) => {
   try {
-    const goal = await Goal.findByIdAndUpdate(req.params.id, req.body, {
+    const category = await Category.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
     });
-    if (!goal) {
-      return res.status(404).json({ message: 'Goal not found' });
+    if (!category) {
+      return res.status(404).json({ message: 'Category not found' });
     }
-    res.json(goal);
+    res.json(category);
   } catch (error: unknown) {
     if (isError(error)) {
       res.status(400).json({ message: error.message });
@@ -78,12 +78,12 @@ router.put('/:id', async (req: Request, res: Response) => {
   }
 });
 
-// Delete a goal by ID
+// Delete a category by ID
 router.delete('/:id', async (req: Request, res: Response) => {
   try {
-    const goal = await Goal.findByIdAndDelete(req.params.id);
-    if (!goal) {
-      return res.status(404).json({ message: 'Goal not found' });
+    const category = await Category.findByIdAndDelete(req.params.id);
+    if (!category) {
+      return res.status(404).json({ message: 'Category not found' });
     }
     res.sendStatus(204);
   } catch (error: unknown) {

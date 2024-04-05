@@ -1,0 +1,32 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const db_1 = __importDefault(require("./db"));
+const goalRoutes_1 = __importDefault(require("./routes/goalRoutes"));
+const squareRoutes_1 = __importDefault(require("./routes/squareRoutes"));
+const categoryRoute_1 = __importDefault(require("./routes/categoryRoute"));
+const progressRoute_1 = __importDefault(require("./routes/progressRoute"));
+const reminderRoute_1 = __importDefault(require("./routes/reminderRoute"));
+const achievementRoute_1 = __importDefault(require("./routes/achievementRoute"));
+const preferencesRoute_1 = __importDefault(require("./routes/preferencesRoute"));
+const activityLogRoute_1 = __importDefault(require("./routes/activityLogRoute"));
+const app = (0, express_1.default)();
+app.use(express_1.default.json());
+app.use(express_1.default.urlencoded({ extended: true }));
+(0, db_1.default)();
+app.use('/api/goals', goalRoutes_1.default);
+app.use('/api/squares', squareRoutes_1.default);
+app.use('/api/categories', categoryRoute_1.default);
+app.use('/api/progress', progressRoute_1.default);
+app.use('/api/reminders', reminderRoute_1.default);
+app.use('/api/achievements', achievementRoute_1.default);
+app.use('/api/preferences', preferencesRoute_1.default);
+app.use('/api/activity-log', activityLogRoute_1.default);
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
+exports.default = app;
